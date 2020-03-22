@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <Style TargetType="Label" x:Key="TitleStyle">
+        <Setter Property="TextColor"  Value="{StaticResource PrimaryColor}"/>
+        <Setter Property="FontAttributes"  Value="Bold"/>
+        <Setter Property="FontSize"  Value="20"/>
+    </Style>
+
+    <Style TargetType="Frame" x:Key="CaqiFrameStyle">
+        <Setter Property="CornerRadius" Value="50" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="HeightRequest" Value="100" />
+        <Setter Property="WidthRequest" Value="100" />
+        <Setter Property="HasShadow" Value="False" />
+        <Setter Property="BackgroundColor" Value="#33f069" />
+        <Setter Property="BorderColor" Value="Gray" />
+    </Style>
+</ResourceDictionary>

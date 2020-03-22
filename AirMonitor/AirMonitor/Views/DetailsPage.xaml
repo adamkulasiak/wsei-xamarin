@@ -4,9 +4,14 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="AirMonitor.Views.MainPage"
+             x:Class="AirMonitor.Views.DetailsPage"
              xmlns:controls="clr-namespace:AirMonitor.Views.Controls"
+             xmlns:viewModels="clr-namespace:AirMonitor.ViewModels"
              BackgroundColor="#f9f9f9">
+    
+    <ContentPage.BindingContext>
+        <viewModels:DetailsViewModel />
+    </ContentPage.BindingContext>
 
     <ScrollView>
         <Grid>
@@ -14,22 +19,14 @@
                 Padding="24"
                 Spacing="12">
                 <Frame
-                    CornerRadius="50"
-                    Padding="0"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center"
-                    HeightRequest="100"
-                    WidthRequest="100"
-                    HasShadow="False"
-                    BackgroundColor="#33f069"
-                    BorderColor="Gray">
+                    Style="{StaticResource CaqiFrameStyle}">
                     <Label
                      HorizontalTextAlignment="Center"
                         VerticalTextAlignment="Center">
                         <Label.FormattedText>
                             <FormattedString>
                                 <Span
-                                    Text="56"
+                                    Text="{Binding CaqiValue}"
                                     FontAttributes="Bold"
                                     TextColor="Black"
                                     FontSize="32"/>
@@ -45,9 +42,7 @@
                 </Frame>
                 <Label
                     Text="Świetna jakość!"
-                    FontSize="20"
-                    TextColor="Black"
-                    FontAttributes="Bold"
+                    Style="{StaticResource TitleStyle}"
                     HorizontalTextAlignment="Center"/>
                 <Label
                     Text="Możesz bezpiecznie wyjść z domu bez swojej maski anty-smogowej i nie bać się o swoje zdrowie."
@@ -71,7 +66,7 @@
                                 <Label.FormattedText>
                                     <FormattedString>
                                         <Span
-                                            Text="34"
+                                            Text="{Binding Pm25Value}"
                                             TextColor="Black"
                                             FontSize="20"/>
                                         <Span
