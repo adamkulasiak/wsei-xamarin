@@ -18,5 +18,11 @@ namespace AirMonitor.Views
             InitializeComponent();
             BindingContext = new HomeViewModel(Navigation);
         }
+
+        private void OnItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            var context = BindingContext as HomeViewModel;
+            context.GoToDetailsCommand.Execute(e.Item);
+        }
     }
 }

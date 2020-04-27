@@ -13,5 +13,6 @@ namespace AirMonitor.Models
         [JsonProperty(PropertyName = "airly")]
         public bool IsAirlyInstallation { get; set; }
         public Sponsor Sponsor { get; set; }
+        public MeasurementItem MeasurementItem { get; set; }
     }
 }

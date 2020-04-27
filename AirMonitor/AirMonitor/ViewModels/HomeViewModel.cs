@@ -13,8 +13,6 @@ using Newtonsoft.Json;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
-
-
 namespace AirMonitor.ViewModels
 {
     public class HomeViewModel : BaseViewModel
@@ -24,7 +22,6 @@ namespace AirMonitor.ViewModels
         public HomeViewModel(INavigation navigation)
         {
             _navigation = navigation;
-
             Initialize();
         }
 
@@ -34,20 +31,37 @@ namespace AirMonitor.ViewModels
             get => _items;
             set => SetProperty(ref _items, value);
         }
-        private List<Measurement> _details;
-        public List<Measurement> Details
+
+        private string _remaining;
+        public string Remaining
         {
-            get => _details;
-            set => SetProperty(ref _details, value);
+            get => _remaining;
+            set => SetProperty(ref _remaining, value);
+        }
+
+        private bool _isVisible;
+        public bool IsVisible
+        {
+            get => _isVisible;
+            set => SetProperty(ref _isVisible, value);
+        }
+        private bool _isRunning;
+        public bool IsRunning
+        {
+            get => _isRunning;
+            set => SetProperty(ref _isRunning, value);
         }
 
         private async Task Initialize()
         {
+            IsRunning = true;
+            IsVisible = true;
             var location = await GetLocation();
             var installations = await GetInstallations(location, maxResults: 7);
-            Items = new List<Installation>(installations);
-            var measurements = await GetMeasurements(Items);
-            Details = new List<Measurement>(measurements);
+            var installationsWithDetails = await GetMeasurementsForInstalations(installations);
+            Items = new List<Installation>(installationsWithDetails);
+            IsRunning = false;
+            IsVisible = false;
         }
         private async Task<IEnumerable<Installation>> GetInstallations(Location location, double maxDistanceInKm = 3, int maxResults = -1)
         {
@@ -70,9 +84,9 @@ namespace AirMonitor.ViewModels
             return response;
         }
 
-        private async Task<IEnumerable<Measurement>> GetMeasurements(IEnumerable<Installation> installations)
+        private async Task<IEnumerable<Installation>> GetMeasurementsForInstalations(IEnumerable<Installation> installations)
         {
-            var measurements = new List<Measurement>();
+            var installationsUpdated = new List<Installation>();
             foreach (var installation in installations)
             {
                 var query = GetQuery(new Dictionary<string, object>
@@ -81,9 +95,10 @@ namespace AirMonitor.ViewModels
                 });
                 var url = GetAirlyApiUrl(App.AirlyApiMeasurementUrl, query);
                 var response = await GetHttpResponseAsync<Measurement>(url);
-                measurements.Add(response);
+                installation.MeasurementItem = response.Current;
+                installationsUpdated.Add(installation);
             }
-            return measurements;
+            return installationsUpdated;
         }
 
         private string GetAirlyApiUrl(string path, string query)
@@ -96,8 +111,6 @@ namespace AirMonitor.ViewModels
 
             return url;
         }
-
-
 
         private string GetQuery(IDictionary<string, object> args)
         {
@@ -130,7 +143,6 @@ namespace AirMonitor.ViewModels
             client.DefaultRequestHeaders.Add("apikey", App.AirlyApiKey);
             return client;
         }
-
         private async Task<T> GetHttpResponseAsync<T>(string url)
         {
             try
@@ -141,6 +153,7 @@ namespace AirMonitor.ViewModels
                 if (response.Headers.TryGetValues("X-RateLimit-Limit-day", out var dayLimit) &&
                     response.Headers.TryGetValues("X-RateLimit-Remaining-day", out var dayLimitRemaining))
                 {
+                    Remaining = dayLimitRemaining.ToArray()[0];
                     System.Diagnostics.Debug.WriteLine($"Day limit: {dayLimit?.FirstOrDefault()}, remaining: {dayLimitRemaining?.FirstOrDefault()}");
                 }
 
@@ -172,12 +185,8 @@ namespace AirMonitor.ViewModels
                 System.Diagnostics.Debug.WriteLine(ex);
             }
 
-
-
             return default;
         }
-
-
 
         private async Task<Location> GetLocation()
         {
@@ -185,16 +194,12 @@ namespace AirMonitor.ViewModels
             return location;
         }
 
-
-
         private ICommand _goToDetailsCommand;
-        public ICommand GoToDetailsCommand => _goToDetailsCommand ?? (_goToDetailsCommand = new Command(OnGoToDetails));
+        public ICommand GoToDetailsCommand => _goToDetailsCommand ?? (_goToDetailsCommand = new Command<Installation>(installation => OnGoToDetails(installation)));
 
-
-
-        private void OnGoToDetails()
+        private void OnGoToDetails(Installation installation)
         {
-            _navigation.PushAsync(new DetailsPage());
+            _navigation.PushAsync(new DetailsPage(installation));
         }
     }
 }

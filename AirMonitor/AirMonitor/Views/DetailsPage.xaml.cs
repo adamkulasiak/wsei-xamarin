@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AirMonitor.Models;
+using AirMonitor.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -13,10 +15,12 @@ namespace AirMonitor.Views
     [DesignTimeVisible(false)]
     public partial class DetailsPage : ContentPage
     {
-        public DetailsPage()
+        public DetailsPage(Installation installation)
         {
             InitializeComponent();
+            BindingContext = new DetailsViewModel(Navigation, installation);
         }
+
 
         private void Help_Clicked(object sender, EventArgs e)
         {

@@ -6,13 +6,16 @@
              mc:Ignorable="d"
              xmlns:models="clr-namespace:AirMonitor.Models"
              x:Class="AirMonitor.Views.HomePage">
-
-    <ListView ItemsSource="{Binding Items}">
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <TextCell Text="{Binding Address.Description}"
-                          Detail="{Binding Id}" />
-            </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
+    <StackLayout>
+        <Label Text="{Binding Remaining}" />
+        <ActivityIndicator IsRunning="{Binding IsRunning}" IsVisible="{Binding IsVisible}" />
+        <ListView ItemsSource="{Binding Items}" ItemTapped="OnItemTapped">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Text="{Binding Address.Description}"
+                              Detail="{Binding MeasurementItem.Indexes[0].Value}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
 </ContentPage>
