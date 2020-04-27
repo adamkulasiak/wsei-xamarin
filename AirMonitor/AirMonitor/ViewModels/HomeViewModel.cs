@@ -13,15 +13,13 @@ using Newtonsoft.Json;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
- 
+
 
 namespace AirMonitor.ViewModels
 {
-    public class HomeViewModel: BaseViewModel
+    public class HomeViewModel : BaseViewModel
     {
         private readonly INavigation _navigation;
-
-
 
         public HomeViewModel(INavigation navigation)
         {
@@ -36,12 +34,20 @@ namespace AirMonitor.ViewModels
             get => _items;
             set => SetProperty(ref _items, value);
         }
+        private List<Measurement> _details;
+        public List<Measurement> Details
+        {
+            get => _details;
+            set => SetProperty(ref _details, value);
+        }
 
         private async Task Initialize()
         {
             var location = await GetLocation();
             var installations = await GetInstallations(location, maxResults: 7);
             Items = new List<Installation>(installations);
+            var measurements = await GetMeasurements(Items);
+            Details = new List<Measurement>(measurements);
         }
         private async Task<IEnumerable<Installation>> GetInstallations(Location location, double maxDistanceInKm = 3, int maxResults = -1)
         {
@@ -50,8 +56,6 @@ namespace AirMonitor.ViewModels
                 System.Diagnostics.Debug.WriteLine("No location data.");
                 return null;
             }
-
-
 
             var query = GetQuery(new Dictionary<string, object>
             {
@@ -62,13 +66,25 @@ namespace AirMonitor.ViewModels
             });
             var url = GetAirlyApiUrl(App.AirlyApiInstallationUrl, query);
 
-
-
             var response = await GetHttpResponseAsync<IEnumerable<Installation>>(url);
             return response;
         }
 
-
+        private async Task<IEnumerable<Measurement>> GetMeasurements(IEnumerable<Installation> installations)
+        {
+            var measurements = new List<Measurement>();
+            foreach (var installation in installations)
+            {
+                var query = GetQuery(new Dictionary<string, object>
+                {
+                    {"installationId", installation.Id }
+                });
+                var url = GetAirlyApiUrl(App.AirlyApiMeasurementUrl, query);
+                var response = await GetHttpResponseAsync<Measurement>(url);
+                measurements.Add(response);
+            }
+            return measurements;
+        }
 
         private string GetAirlyApiUrl(string path, string query)
         {
@@ -104,8 +120,6 @@ namespace AirMonitor.ViewModels
             return query.ToString();
         }
 
-
-
         private static HttpClient GetHttpClient()
         {
             var client = new HttpClient();
@@ -116,8 +130,6 @@ namespace AirMonitor.ViewModels
             client.DefaultRequestHeaders.Add("apikey", App.AirlyApiKey);
             return client;
         }
-
-
 
         private async Task<T> GetHttpResponseAsync<T>(string url)
         {
@@ -131,8 +143,6 @@ namespace AirMonitor.ViewModels
                 {
                     System.Diagnostics.Debug.WriteLine($"Day limit: {dayLimit?.FirstOrDefault()}, remaining: {dayLimitRemaining?.FirstOrDefault()}");
                 }
-
-
 
                 switch ((int)response.StatusCode)
                 {

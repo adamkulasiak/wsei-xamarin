@@ -11,7 +11,7 @@
         <ListView.ItemTemplate>
             <DataTemplate>
                 <TextCell Text="{Binding Address.Description}"
-                          Detail="Later Todo" />
+                          Detail="{Binding Id}" />
             </DataTemplate>
         </ListView.ItemTemplate>
     </ListView>
