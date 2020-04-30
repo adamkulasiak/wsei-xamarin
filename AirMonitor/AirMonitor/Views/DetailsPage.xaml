@@ -41,11 +41,11 @@
                     </Label>
                 </Frame>
                 <Label
-                    Text="Świetna jakość!"
+                    Text="{Binding Description}"
                     Style="{StaticResource TitleStyle}"
                     HorizontalTextAlignment="Center"/>
                 <Label
-                    Text="Możesz bezpiecznie wyjść z domu bez swojej maski anty-smogowej i nie bać się o swoje zdrowie."
+                    Text="{Binding Advice}"
                     FontSize="14"
                     TextColor="Black" />
 
@@ -151,7 +151,6 @@
                                 Text="{Binding Pressure}"
                                 FontSize="20"
                                 TextColor="Black" />
-                            <!-- Set Maximum before Minimum in Slider -->
                             <Slider
                                 Maximum="1100"
                                 Minimum="900"
@@ -159,6 +158,21 @@
                                 MaximumTrackColor="Gray"
                                 MinimumTrackColor="CornflowerBlue"
                                 ThumbColor="CornflowerBlue"/>
+                        </StackLayout>
+                    </controls:ContentWithHeader.ControlContent>
+                </controls:ContentWithHeader>
+
+                <BoxView
+                    HeightRequest="1"
+                    HorizontalOptions="Fill"
+                    BackgroundColor="LightGray"/>
+                <controls:ContentWithHeader Title="Temperatura">
+                    <controls:ContentWithHeader.ControlContent>
+                        <StackLayout>
+                            <Label
+                                Text="{Binding Temperature}"
+                                FontSize="20"
+                                TextColor="Black" />
                         </StackLayout>
                     </controls:ContentWithHeader.ControlContent>
                 </controls:ContentWithHeader>

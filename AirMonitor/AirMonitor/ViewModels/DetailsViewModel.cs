@@ -20,11 +20,14 @@ namespace AirMonitor.ViewModels
         {
             _navigation = navigation;
             _installation = installation;
-            _caqiValue = Convert.ToInt32(installation.MeasurementItem.Indexes[0].Value);
+            _caqiValue = Convert.ToInt32(installation.MeasurementItem.Indexes.FirstOrDefault().Value);
             _pm25Value = Convert.ToInt32(installation.MeasurementItem.Values.FirstOrDefault(x => x.Name == "PM25").Value);
             _pm10Value = Convert.ToInt32(installation.MeasurementItem.Values.FirstOrDefault(x => x.Name == "PM10").Value);
             _humidity = Convert.ToInt32(installation.MeasurementItem.Values.FirstOrDefault(x => x.Name == "HUMIDITY").Value);
             _pressure = Convert.ToInt32(installation.MeasurementItem.Values.FirstOrDefault(x => x.Name == "PRESSURE").Value);
+            _description = installation.MeasurementItem.Indexes.FirstOrDefault().Description;
+            _advidce = installation.MeasurementItem.Indexes.FirstOrDefault().Advice;
+            _temperature = Convert.ToInt32(installation.MeasurementItem.Values.FirstOrDefault(x => x.Name == "TEMPERATURE").Value);
         }
 
         private Installation _installation;
@@ -62,6 +65,27 @@ namespace AirMonitor.ViewModels
         {
             get => _pressure;
             set => SetProperty(ref _pressure, value);
+        }
+
+        private string _description;
+        public string Description
+        {
+            get => _description;
+            set => SetProperty(ref _description, value);
+        }
+
+        private string _advidce;
+        public string Advice
+        {
+            get => _advidce;
+            set => SetProperty(ref _advidce, value);
+        }
+
+        private int _temperature;
+        public int Temperature
+        {
+            get => _temperature;
+            set => SetProperty(ref _temperature, value);
         }
 
     }
