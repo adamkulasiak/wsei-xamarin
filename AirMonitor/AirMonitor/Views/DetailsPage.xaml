@@ -99,7 +99,7 @@
                                 <Label.FormattedText>
                                     <FormattedString>
                                         <Span
-                                            Text="67"
+                                            Text="{Binding Pm10Value}"
                                             TextColor="Black"
                                             FontSize="20"/>
                                         <Span
@@ -126,11 +126,13 @@
                     <controls:ContentWithHeader.ControlContent>
                         <StackLayout>
                             <Label
-                                Text="95%"
+                                Text="{Binding Humidity}"
                                 FontSize="20"
                                 TextColor="Black" />
                             <Slider
-                                Value="0.95"
+                                Minimum="0"
+                                Maximum="100"
+                                Value="{Binding Humidity}"
                                 MaximumTrackColor="Gray"
                                 MinimumTrackColor="CornflowerBlue"
                                 ThumbColor="CornflowerBlue"/>
@@ -146,14 +148,14 @@
                     <controls:ContentWithHeader.ControlContent>
                         <StackLayout>
                             <Label
-                                Text="1026 hPa"
+                                Text="{Binding Pressure}"
                                 FontSize="20"
                                 TextColor="Black" />
                             <!-- Set Maximum before Minimum in Slider -->
                             <Slider
                                 Maximum="1100"
                                 Minimum="900"
-                                Value="1026"
+                                Value="{Binding Pressure}"
                                 MaximumTrackColor="Gray"
                                 MinimumTrackColor="CornflowerBlue"
                                 ThumbColor="CornflowerBlue"/>

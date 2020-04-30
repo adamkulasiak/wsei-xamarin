@@ -57,7 +57,7 @@ namespace AirMonitor.ViewModels
             IsRunning = true;
             IsVisible = true;
             var location = await GetLocation();
-            var installations = await GetInstallations(location, maxResults: 7);
+            var installations = await GetInstallations(location, maxResults: 1);
             var installationsWithDetails = await GetMeasurementsForInstalations(installations);
             Items = new List<Installation>(installationsWithDetails);
             IsRunning = false;
@@ -140,6 +140,7 @@ namespace AirMonitor.ViewModels
 
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip");
+            client.DefaultRequestHeaders.Add("Accept-Language", "pl");
             client.DefaultRequestHeaders.Add("apikey", App.AirlyApiKey);
             return client;
         }
