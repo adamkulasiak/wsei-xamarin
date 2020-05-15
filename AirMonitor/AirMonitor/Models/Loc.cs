@@ -6,6 +6,10 @@ namespace AirMonitor.Models
 {
     public class Loc
     {
+        public Loc()
+        {
+
+        }
         public double Latitude { get; set; }
         public double Longtitude { get; set; }
     }

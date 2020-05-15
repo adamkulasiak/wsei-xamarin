@@ -1,11 +1,18 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace AirMonitor.Models
 {
-    public class Index
+    public class AirQualityIndex
     {
+        public AirQualityIndex()
+        {
+
+        }
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
         public string Name { get; set; }
         public double Value { get; set; }
         public string Level { get; set; }

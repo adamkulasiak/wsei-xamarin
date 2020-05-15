@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Windows.Input;
+using AirMonitor.Helpers;
 using AirMonitor.Models;
 using AirMonitor.Views;
 using Newtonsoft.Json;
@@ -18,10 +19,12 @@ namespace AirMonitor.ViewModels
     public class HomeViewModel : BaseViewModel
     {
         private readonly INavigation _navigation;
+        private readonly DatabaseHelper _db;
 
         public HomeViewModel(INavigation navigation)
         {
             _navigation = navigation;
+            _db = new DatabaseHelper();
             Initialize();
         }
 
@@ -54,6 +57,7 @@ namespace AirMonitor.ViewModels
 
         private async Task Initialize()
         {
+            
             IsRunning = true;
             IsVisible = true;
             var location = await GetLocation();
@@ -62,6 +66,9 @@ namespace AirMonitor.ViewModels
             Items = new List<Installation>(installationsWithDetails);
             IsRunning = false;
             IsVisible = false;
+            //await _db.SaveInstalations(Items);
+            //await _db.SaveMeasurements(Items.Select(x => x.Measurement).ToList());
+            
         }
         private async Task<IEnumerable<Installation>> GetInstallations(Location location, double maxDistanceInKm = 3, int maxResults = -1)
         {
@@ -95,7 +102,7 @@ namespace AirMonitor.ViewModels
                 });
                 var url = GetAirlyApiUrl(App.AirlyApiMeasurementUrl, query);
                 var response = await GetHttpResponseAsync<Measurement>(url);
-                installation.MeasurementItem = response.Current;
+                installation.Measurement = response;
                 installationsUpdated.Add(installation);
             }
             return installationsUpdated;
