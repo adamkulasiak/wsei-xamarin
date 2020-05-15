@@ -13,6 +13,7 @@ using AirMonitor.Views;
 using Newtonsoft.Json;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using Xamarin.Forms.Maps;
 
 namespace AirMonitor.ViewModels
 {
@@ -33,6 +34,13 @@ namespace AirMonitor.ViewModels
         {
             get => _items;
             set => SetProperty(ref _items, value);
+        }
+
+        private List<MapLocation> _locations;
+        public List<MapLocation> Locations
+        {
+            get => _locations;
+            set => SetProperty(ref _locations, value);
         }
 
         private string _remaining;
@@ -64,10 +72,14 @@ namespace AirMonitor.ViewModels
             var installations = await GetInstallations(location, maxResults: 1);
             var installationsWithDetails = await GetMeasurementsForInstalations(installations);
             Items = new List<Installation>(installationsWithDetails);
+            Locations = Items.Select(x => new MapLocation
+            {
+                Address = x.Address.Description,
+                Description = "CAQI: " + x.Measurement.Current.Values.FirstOrDefault().Value.ToString(),
+                Position = new Position(x.Location.Latitude, x.Location.Longitude)
+            }).ToList();
             IsRunning = false;
             IsVisible = false;
-            //await _db.SaveInstalations(Items);
-            //await _db.SaveMeasurements(Items.Select(x => x.Measurement).ToList());
             
         }
         private async Task<IEnumerable<Installation>> GetInstallations(Location location, double maxDistanceInKm = 3, int maxResults = -1)
