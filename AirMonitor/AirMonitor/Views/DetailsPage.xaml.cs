@@ -21,7 +21,6 @@ namespace AirMonitor.Views
             BindingContext = new DetailsViewModel(Navigation, installation);
         }
 
-
         private void Help_Clicked(object sender, EventArgs e)
         {
             DisplayAlert("Co to jest CAQI?", "Lorem ipsum.", "Zamknij");

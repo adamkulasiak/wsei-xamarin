@@ -25,7 +25,6 @@ namespace AirMonitor.ViewModels
         public HomeViewModel(INavigation navigation)
         {
             _navigation = navigation;
-            _db = new DatabaseHelper();
             Initialize();
         }
 
@@ -69,7 +68,7 @@ namespace AirMonitor.ViewModels
             IsRunning = true;
             IsVisible = true;
             var location = await GetLocation();
-            var installations = await GetInstallations(location, maxResults: 1);
+            var installations = await GetInstallations(location, maxResults: 3);
             var installationsWithDetails = await GetMeasurementsForInstalations(installations);
             Items = new List<Installation>(installationsWithDetails);
             Locations = Items.Select(x => new MapLocation
@@ -219,6 +218,15 @@ namespace AirMonitor.ViewModels
 
         private void OnGoToDetails(Installation installation)
         {
+            _navigation.PushAsync(new DetailsPage(installation));
+        }
+
+        private ICommand _goToDetailsCommandFromMap;
+        public ICommand GoToDetailsCommandFromMap => _goToDetailsCommandFromMap ?? (_goToDetailsCommandFromMap = new Command<string>(address => OnGoToDetailsFromMap(address)));
+
+        private void OnGoToDetailsFromMap(string address)
+        {
+            var installation = Items.First(x => x.Address.Description == address);
             _navigation.PushAsync(new DetailsPage(installation));
         }
     }

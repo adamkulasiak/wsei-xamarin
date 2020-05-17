@@ -10,7 +10,7 @@
         <maps:Map x:Name="map" IsShowingUser="True" ItemsSource="{Binding Locations}">
             <maps:Map.ItemTemplate>
                 <DataTemplate>
-                    <maps:Pin Position="{Binding Position}" Address="{Binding Address}" Label="{Binding Description}" />
+                    <maps:Pin Position="{Binding Position}" Address="{Binding Address}" Label="{Binding Description}" InfoWindowClicked="Pin_InfoWindowClicked" />
                 </DataTemplate>
             </maps:Map.ItemTemplate>
         </maps:Map>

@@ -1,10 +1,4 @@
 ﻿using AirMonitor.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -17,6 +11,13 @@ namespace AirMonitor.Views
         {
             InitializeComponent();
             BindingContext = new HomeViewModel(Navigation);
+        }
+
+        private void Pin_InfoWindowClicked(object sender, Xamarin.Forms.Maps.PinClickedEventArgs e)
+        {
+            var address = (sender as Xamarin.Forms.Maps.Pin).Address;
+            var context = BindingContext as HomeViewModel;
+            context.GoToDetailsCommandFromMap.Execute(address);
         }
     }
 }
